@@ -66,8 +66,7 @@ sample interaction:
   says "I cannot translate this yet" outside that grammar instead of
   guessing. The 100% is over that disclosed contract, not over arbitrary
   English.
-- Ground truth is golden SQL written independently of the translator
-  templates, so a template bug cannot rubber-stamp itself.
+- Ground truth is hand-written golden SQL, compared against result rows rather than SQL text. The 15 cases and the translator grammar were written by the same author (with AI help), so 15/15 is a regression check over the supported shapes, not an independent test.
 - The LLM mode (any OpenAI-compatible endpoint) widens coverage; safety
   is unchanged because the gate sits after generation, not in the prompt.
 
