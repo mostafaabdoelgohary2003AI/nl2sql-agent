@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/logo.png" width="128" alt="nl2sql-agent logo"></p>
+
 # nl2sql-agent
 
 Ask a business database questions in plain English; get answers from real,
