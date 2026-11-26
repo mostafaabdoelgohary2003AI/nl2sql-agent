@@ -1,0 +1,1 @@
+# No dependencies: the offline mode is pure Python standard library (sqlite3).
