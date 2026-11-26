@@ -35,14 +35,15 @@ def ensure_read_only(sql: str) -> None:
 
 
 class TextToSQLAgent:
-    def __init__(self, conn: sqlite3.Connection, llm=None) -> None:
+    def __init__(self, conn: sqlite3.Connection, llm=None, use_rules: bool = True) -> None:
+        self.use_rules = use_rules
         self.conn = conn
         self.llm = llm  # optional OpenAI-compatible client with .complete()
         names = conn.execute("SELECT name FROM teachers").fetchall()
         self.teacher_names = [n for (n,) in names]
 
     def _propose_sql(self, question: str) -> tuple[str | None, str]:
-        sql = translate(question, self.teacher_names)
+        sql = translate(question, self.teacher_names) if self.use_rules else None
         if sql is not None:
             return sql, "rules"
         if self.llm is not None:

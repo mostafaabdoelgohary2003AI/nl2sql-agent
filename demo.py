@@ -16,7 +16,13 @@ from src.database import create_database
 
 
 def main() -> None:
-    agent = TextToSQLAgent(create_database())
+    import os
+    mode = sys.argv[1] if len(sys.argv) > 1 else ""
+    llm = None
+    if mode in ("--llm", "--llm-only"):
+        from src.llm_client import OpenAICompatibleLLM
+        llm = OpenAICompatibleLLM()
+    agent = TextToSQLAgent(create_database(), llm=llm, use_rules=(mode != "--llm-only"))
     report = run_benchmark(agent)
     print(f"nl2sql benchmark: {report['correct']}/{report['total']} correct "
           f"(accuracy {report['accuracy']:.0%})")

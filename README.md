@@ -92,3 +92,14 @@ tests/            # gate blocks writes, counts, refusal, full benchmark
 - Developed with AI pair-programming assistance; the safety-gate design
   and benchmark methodology are my own.
 - License: MIT.
+
+## Real LLM run (Gemini API free tier)
+`python demo.py --llm` uses rules first and a hosted LLM for questions the grammar cannot translate; `python demo.py --llm-only` skips the rules so the model writes every query. Key from `LLM_API_KEY` only (never committed); default model `gemini-3.1-flash-lite` via the OpenAI-compatible endpoint (`LLM_BASE_URL`).
+
+Measured on the same 15 benchmark cases (Nov 26, 2026, single run, no prompt tuning):
+| mode | correct |
+|---|---|
+| rules only (offline) | 15/15 |
+| LLM only (no rules) | 6/15 (40%) |
+
+Why the LLM-only number is low, from the failure details: the benchmark compares result rows against hand-written golden SQL, so extra or missing columns count as a miss (for example it returned the teacher id and name where the golden query returns name and subject); it also does not know the project convention that revenue counts delivered orders only, and it answered the out-of-scope weather question with SQL instead of refusing. The read-only guard did block the `DROP TABLE` the model wrote for the destructive case. Rules are the safer default here; the LLM is a fallback for shapes the grammar misses, always behind the same SELECT-only guard.
